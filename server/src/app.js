@@ -11,6 +11,10 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+app.use(express.json());
+
+app.use('/api/v1/users', require('./routes/user/user.routes'));
+
 app.get('/', (req, res, next) => {
   res.status(StatusCodes.OK).json({
     status: true,
