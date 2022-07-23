@@ -22,4 +22,9 @@ app.get('/', (req, res, next) => {
   });
 });
 
+const notFoundMiddleware = require('./middlewares/not-found');
+const errorHandlerMiddleware = require('./middlewares/error-handler');
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
+
 module.exports = app;
