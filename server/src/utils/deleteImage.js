@@ -2,7 +2,9 @@ const fs = require('fs');
 const path = require('path');
 
 function deleteImg({ imageLocation, res }) {
-  const directory = path.join(__dirname, '..', 'uploads');
+  const directory = path.join(__dirname, '../..', 'uploads');
+
+  console.log(directory);
 
   try {
     fs.unlinkSync(`${directory}/${imageLocation}`);

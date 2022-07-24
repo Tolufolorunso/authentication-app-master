@@ -70,12 +70,22 @@ const getUser = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   const { userID } = req.params;
-  const { phone, name, bio } = req.body;
+  const { phone, name, bio, email } = req.body;
 
   const userProfile = await User.findOne({ _id: userID });
 
   if (!userProfile) {
     throw new CustomError.NotFoundError('User not found');
+  }
+
+  if (email) {
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
+      throw new CustomError.BadRequestError(
+        'Email is already exist, try another'
+      );
+    }
+    userProfile.email = email;
   }
 
   if (phone) {
@@ -115,13 +125,14 @@ const uploadProfileImage = async (req, res) => {
       message: 'Nothing here',
       image: userProfile.image,
     });
-  } else {
-    oldImageUrl = userProfile.image;
   }
+  oldImageUrl = userProfile.image;
 
-  // deleteImg({ imageLocation: '', res });
+  userProfile.image = req.file.filename;
 
-  console.log(userProfile);
+  await userProfile.save();
+
+  deleteImg({ imageLocation: oldImageUrl, res });
 
   res.status(StatusCodes.OK).json({
     status: true,
