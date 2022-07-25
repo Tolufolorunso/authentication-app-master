@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { promisify } = require('util');
 
 const createJWT = ({ payload }) => {
   console.log(payload);
@@ -12,6 +13,11 @@ const createJWT = ({ payload }) => {
   return token;
 };
 
+const isTokenValid = async (token) => {
+  return await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+};
+
 module.exports = {
   createJWT,
+  isTokenValid,
 };

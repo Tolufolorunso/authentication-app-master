@@ -1,4 +1,4 @@
-const { createJWT } = require('./jwt');
+const { createJWT, isTokenValid } = require('./jwt');
 const upload = require('./upload');
 
-module.exports = { createJWT, upload };
+module.exports = { createJWT, isTokenValid, upload };

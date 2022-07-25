@@ -54,8 +54,9 @@ const login = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  const { userID } = req.params;
-  const userProfile = await User.findById(userID);
+  // const { userID } = req.params;
+  // console.log(req.user);
+  const userProfile = await User.findById(req.user._id);
 
   if (!userProfile) {
     throw new CustomError.NotFoundError('User not found');
@@ -69,10 +70,11 @@ const getUser = async (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-  const { userID } = req.params;
+  // const { userID } = req.params;
+  // console.log(req.user);
   const { phone, name, bio, email } = req.body;
 
-  const userProfile = await User.findOne({ _id: userID });
+  const userProfile = await User.findOne({ _id: req.user._id });
 
   if (!userProfile) {
     throw new CustomError.NotFoundError('User not found');
@@ -110,10 +112,10 @@ const updateProfile = async (req, res) => {
 };
 
 const uploadProfileImage = async (req, res) => {
-  const { userID } = req.params;
+  // const { userID } = req.params;
   let oldImageUrl;
 
-  const userProfile = await User.findById(userID);
+  const userProfile = await User.findById(req.user._id);
 
   if (!userProfile) {
     throw new CustomError.NotFoundError('User not found');
@@ -141,10 +143,36 @@ const uploadProfileImage = async (req, res) => {
   });
 };
 
+const forgotPassword = async (req, res, next) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new CustomError.NotFoundError('No user found with the email address');
+  }
+
+  //Get reset token
+  const resetToken = user.getResetPasswordToken();
+  await user.save({
+    validateBeforeSave: false,
+  });
+
+  // Create reset url
+  const resetUrl = `${req.protocol}://${req.get(
+    'host'
+  )}/auth/resetpassword/${resetToken}`;
+
+  const message = `Reset your password : \n\n ${resetUrl}`;
+  try {
+    object;
+  } catch (error) {}
+  console.log(message);
+};
+
 module.exports = {
   register,
   login,
   getUser,
   updateProfile,
   uploadProfileImage,
+  forgotPassword,
 };
