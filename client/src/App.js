@@ -1,9 +1,23 @@
 import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {
+  Landing,
+  Register,
+  Login,
+  Profile,
+  ProfileEdit,
+  NotFound,
+} from './pages';
 const App = () => {
   return (
-    <div class="welcome">
-      <h1>Welcome to React</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/users/register" element={<Register />} />
+        <Route path="/users/login" element={<Login />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
