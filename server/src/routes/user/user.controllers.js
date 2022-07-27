@@ -27,7 +27,7 @@ const login = async (req, res) => {
   if (!email || !password) {
     throw new CustomError.BadRequestError('Please provide email and password');
   }
-  const user = await User.findOne({ email });
+  let user = await User.findOne({ email }).select('+password');
 
   if (!user) {
     throw new CustomError.BadRequestError('invalid credentials');
@@ -44,6 +44,8 @@ const login = async (req, res) => {
       email: user.email,
     },
   });
+  user = user.toObject();
+  delete user.password;
 
   res.status(StatusCodes.OK).json({
     status: true,
