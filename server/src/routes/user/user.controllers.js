@@ -165,8 +165,10 @@ const forgotPassword = async (req, res, next) => {
 
   const message = `Reset your password : \n\n ${resetUrl}`;
   try {
-    object;
-  } catch (error) {}
+    console.log('I will continue later');
+  } catch (error) {
+    console.log(error, 'I will continue later');
+  }
   console.log(message);
 };
 
